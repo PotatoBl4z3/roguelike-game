@@ -3,7 +3,7 @@ import tcod
 
 from entity import Entity
 from input_handlers import EventHandler
-from game_map import GameMap
+from procgen import RectangularRoom
 from engine import Engine
 
 
@@ -13,6 +13,10 @@ def main() -> None:
     
     map_width = 80 #Setting the map width
     map_height = 45 #Setting the map height
+    
+    room_max_size = 10
+    room_min_size = 6
+    max_rooms = 30
     
     tileset = tcod.tileset.load_tilesheet(
         "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
@@ -24,7 +28,14 @@ def main() -> None:
     npc = Entity(int(screen_width / 2 - 5), int(screen_height / 2), "@", (255, 255, 0)) #Creating an NPC entity
     entities = {npc, player} #Creating a Set of entities
     
-    game_map = GameMap(map_width, map_height) #Creating the game map
+    game_map = RectangularRoom.generate_dungeon(
+        max_rooms=max_rooms,
+        room_min_size=room_min_size,
+        room_max_size=room_max_size,
+        map_width=map_width,
+        map_height=map_height,
+        player=player
+    ) #Creating the game map (P.S. its not working without importing RectangularRoom so idk come back to this later)
     
     engine = Engine(entities=entities, event_handler=event_handler,game_map = game_map, player=player) #Creating the engine that handles events and rendering
     
