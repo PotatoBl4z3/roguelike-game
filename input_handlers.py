@@ -2,7 +2,7 @@ from typing import Optional #importing Python's type hinting system
 
 import tcod.event #importing tcod's event system
 
-from actions import Action, EscapeAction, MovementAction #importing the Action class and its subclasses from actions.py
+from actions import Action, EscapeAction, BumpAction #importing the Action class and its subclasses from actions.py
 
 #Class that handles all Events
 class EventHandler(tcod.event.EventDispatch[Action]):
@@ -15,13 +15,13 @@ class EventHandler(tcod.event.EventDispatch[Action]):
         key = event.sym #Holds the key pressed
         
         if key == tcod.event.K_UP:
-            action = MovementAction(dx = 0, dy = -1)
+            action = BumpAction(dx = 0, dy = -1)
         elif key == tcod.event.K_DOWN:
-            action = MovementAction(dx = 0, dy = 1)
+            action = BumpAction(dx = 0, dy = 1)
         elif key == tcod.event.K_RIGHT:
-            action = MovementAction(dx=1, dy=0)
+            action = BumpAction(dx=1, dy=0)
         elif key == tcod.event.K_LEFT:
-            action = MovementAction(dx=-1, dy=0)
+            action = BumpAction(dx=-1, dy=0)
             
         elif key == tcod.event.K_ESCAPE:
             action = EscapeAction()
