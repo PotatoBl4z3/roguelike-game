@@ -3,7 +3,6 @@ import copy
 import tcod
 
 import entity_factories
-from input_handlers import EventHandler
 from procgen import RectangularRoom
 from engine import Engine
 
@@ -25,21 +24,21 @@ def main() -> None:
         "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD
     ) #Loading the tileset from the png
     
-    event_handler = EventHandler()  #Creating the Event Handler object which recieves events and processes them
-    
     player = copy.deepcopy(entity_factories.player) #Creating a Player entity
     
-    game_map = RectangularRoom.generate_dungeon(
+    engine = Engine(player=player)
+    
+    engine.game_map = RectangularRoom.generate_dungeon(
         max_rooms=max_rooms,
         room_min_size=room_min_size,
         room_max_size=room_max_size,
         map_width=map_width,
         map_height=map_height,
         max_monsters_per_room=max_monsters_per_room,
-        player=player
+        engine=engine,
     ) #Creating the game map (P.S. its not working without importing RectangularRoom so idk come back to this later)
     
-    engine = Engine(event_handler=event_handler,game_map = game_map, player=player) #Creating the engine that handles events and rendering
+    engine.update_fov()
     
     with tcod.context.new_terminal(  #Creating a new terminal with the given values
         screen_width,
@@ -52,8 +51,7 @@ def main() -> None:
         while True: #Game Loop
             engine.render(console=root_console, context=context) #Calling engine's render function
             
-            events = tcod.event.wait() #Inputting the event
-            engine.handle_events(events=events) #Calling engine's handle events function to handle the events
+            engine.event_handler.handle_events()
 
 
 if __name__ == "__main__":
