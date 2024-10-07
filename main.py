@@ -2,6 +2,7 @@
 import copy
 import tcod
 
+import color
 import entity_factories
 from procgen import RectangularRoom
 from engine import Engine
@@ -12,7 +13,7 @@ def main() -> None:
     screen_height = 50 #Setting the screen height
     
     map_width = 80 #Setting the map width
-    map_height = 45 #Setting the map height
+    map_height = 43 #Setting the map height
     
     room_max_size = 10
     room_min_size = 6
@@ -40,6 +41,10 @@ def main() -> None:
     
     engine.update_fov()
     
+    engine.message_log.add_message(
+        "Hello and welcome, adventurer, to yet another dungeon!", color.welcome_text
+    )
+    
     with tcod.context.new_terminal(  #Creating a new terminal with the given values
         screen_width,
         screen_height,
@@ -49,9 +54,11 @@ def main() -> None:
     ) as context:
         root_console = tcod.Console(screen_width, screen_height, order = "F") #Creating a console to which all the changes are drawn
         while True: #Game Loop
-            engine.render(console=root_console, context=context) #Calling engine's render function
+            root_console.clear()
+            engine.event_handler.on_render(console=root_console)
+            context.present(root_console)
             
-            engine.event_handler.handle_events()
+            engine.event_handler.handle_events(context)
 
 
 if __name__ == "__main__":
