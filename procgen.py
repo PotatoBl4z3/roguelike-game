@@ -41,7 +41,7 @@ class RectangularRoom:
             and self.y2 >= other.y1
         )
         
-    def place_entities(
+def place_entities(
         room: RectangularRoom, dungeon: GameMap, maximum_monsters: int, maximum_items: int
         ) -> None:
         number_of_monsters = random.randint(0, maximum_monsters)
@@ -74,7 +74,7 @@ class RectangularRoom:
                     entity_factories.lightning_scroll.spawn(dungeon, x, y)
     
     
-    def tunnel_between(start: Tuple[int, int], end: Tuple[int, int]) -> Iterator[Tuple[int, int]]:
+def tunnel_between(start: Tuple[int, int], end: Tuple[int, int]) -> Iterator[Tuple[int, int]]:
         """Return an L-shaped tunnel between these two points."""
         x1, y1 = start
         x2, y2 = end
@@ -91,7 +91,8 @@ class RectangularRoom:
         for x, y in tcod.los.bresenham((corner_x, corner_y), (x2, y2)).tolist():
             yield x, y
     
-    def generate_dungeon(max_rooms: int,
+
+def generate_dungeon(max_rooms: int,
                          room_min_size: int,
                          room_max_size: int,
                          map_width: int,
@@ -128,10 +129,10 @@ class RectangularRoom:
                 player.place(*new_room.center, dungeon)
             else:  # All rooms after the first.
                 # Dig out a tunnel between this room and the previous one.
-                for x, y in RectangularRoom.tunnel_between(rooms[-1].center, new_room.center):
+                for x, y in tunnel_between(rooms[-1].center, new_room.center):
                     dungeon.tiles[x, y] = tile_types.floor
                 
-            RectangularRoom.place_entities(new_room, dungeon, max_monsters_per_room, max_items_per_room) #Calling place_entities function
+            place_entities(new_room, dungeon, max_monsters_per_room, max_items_per_room) #Calling place_entities function
 
             # Finally, append the new room to the list.
             rooms.append(new_room)
